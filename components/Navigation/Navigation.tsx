@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import styles from "./Navigation.module.scss";
 import Link from "next/link";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 interface NavigLink {
   label: string;
@@ -14,9 +14,14 @@ interface IProps {
   navlinks: NavigLink[];
 }
 
+const handleLogout = () => {
+  signOut({ callbackUrl: "/" });
+};
+
 const Navigation = ({ navlinks }: IProps) => {
   const pathname = usePathname();
   const session = useSession();
+  console.log(session?.data);
 
   return (
     <>
@@ -34,9 +39,11 @@ const Navigation = ({ navlinks }: IProps) => {
       })}
       {session?.data && <Link href="/profile">Profile</Link>}
       {session?.data ? (
-        <Link href="#">Sign out</Link>
+        <Link href="#" onClick={handleLogout}>
+          Sign out
+        </Link>
       ) : (
-        <Link href="/api/auth/signin">Sign in </Link>
+        <Link href="/signin">SignIn</Link>
       )}
     </>
   );
