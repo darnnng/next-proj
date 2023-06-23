@@ -1,3 +1,4 @@
+import { getData, getPost } from "@/services/getPosts";
 import { Metadata } from "next";
 
 type PageProps = {
@@ -6,29 +7,24 @@ type PageProps = {
   };
 };
 
-async function getData(id: string) {
-  const response = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${id}`,
-    {
-      next: {
-        revalidate: 60,
-      },
-    }
-  );
-  return response.json();
+export async function generateStaticParams() {
+  const posts: any[] = await getData();
+  return posts.map((post) => ({
+    slug: post.id.toString(),
+  }));
 }
 
 export async function generateMetadata({
   params: { id },
 }: PageProps): Promise<Metadata> {
-  const post = await getData(id);
+  const post = await getPost(id);
   return {
     title: post.title,
   };
 }
 
 export default async function About({ params: { id } }: PageProps) {
-  const post = await getData(id);
+  const post = await getPost(id);
   return (
     <>
       <h3>{post.title}</h3>

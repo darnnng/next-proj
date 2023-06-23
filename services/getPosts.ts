@@ -1,9 +1,5 @@
 export async function getData() {
-  const response = await fetch(`https://jsonplaceholder.typicode.com/posts`, {
-    next: {
-      revalidate: 60,
-    },
-  });
+  const response = await fetch(`https://jsonplaceholder.typicode.com/posts`);
   return response.json();
 }
 
@@ -16,3 +12,15 @@ export const getPostsBySearch = async (search: string) => {
 
   return response.json();
 };
+
+export async function getPost(id: string) {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${id}`,
+    {
+      next: {
+        revalidate: 60,
+      },
+    }
+  );
+  return response.json();
+}
